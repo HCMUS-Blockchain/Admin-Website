@@ -1,5 +1,4 @@
 import { Color } from '@/constants'
-import { useCampaign } from '@/hooks'
 import {
   Campaign,
   EnhancedTableHeadProps,
@@ -13,13 +12,6 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import {
   alpha,
   Box,
-  Button,
-  Checkbox,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   FormControlLabel,
   IconButton,
   Paper,
@@ -42,6 +34,7 @@ import dayjs from 'dayjs'
 import Image from 'next/image'
 import Link from 'next/link'
 import * as React from 'react'
+import { FormDialog } from './form-dialog'
 
 function EnhancedTableHead(props: EnhancedTableHeadProps) {
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, headCells } =
@@ -157,6 +150,13 @@ export function EnhancedTable(props: EnhancedTableProps) {
   const [open, setOpen] = React.useState(false)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
   const { headCells, campaignList } = props
+  const [dataDialog, setDataDialog] = React.useState()
+
+  const handleDialog = (id: string) => {
+    const data = campaignList.find((item: any) => item._id === id)
+    setDataDialog(data)
+    setOpen(true)
+  }
   const handleClickOpen = (id: string) => {
     setSingle(id)
     setOpen(true)
@@ -244,10 +244,9 @@ export function EnhancedTable(props: EnhancedTableProps) {
             <TableBody>
               {stableSort(campaignList, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
+                .map((row: any, index) => {
                   const isItemSelected = isSelected(row._id.toString())
                   const labelId = `enhanced-table-checkbox-${index}`
-
                   return (
                     <TableRow
                       hover
@@ -283,12 +282,12 @@ export function EnhancedTable(props: EnhancedTableProps) {
                       </TableCell>
 
                       <TableCell align="left">{row.name}</TableCell>
-                      <TableCell align="left">{row.nameOfShop}</TableCell>
+                      <TableCell align="left">{row.counterpartID.nameOfShop}</TableCell>
                       <TableCell align="left">
-                        {dayjs.unix(row.dateBegin as number).format('DD/MM/YYYY hh:mmA')}
+                        {dayjs(row.dateBegin).format('DD/MM/YYYY hh:mmA')}
                       </TableCell>
                       <TableCell align="left">
-                        {dayjs.unix(row.dateEnd as number).format('DD/MM/YYYY hh:mmA')}
+                        {dayjs(row.dateEnd).format('DD/MM/YYYY hh:mmA')}
                       </TableCell>
                       <TableCell align="left">
                         <Box
@@ -305,9 +304,9 @@ export function EnhancedTable(props: EnhancedTableProps) {
                       </TableCell>
                       <TableCell align="right">{row.numberOfVoucher}</TableCell>
                       <TableCell align="left">
-                        <Tooltip title="Delete">
+                        <Tooltip title="Details">
                           <IconButton
-                            onClick={() => handleClickOpen(row._id.toString())}
+                            onClick={() => handleDialog(row._id.toString())}
                             color="warning"
                           >
                             <VisibilityIcon sx={{ p: 0 }} />
@@ -343,6 +342,7 @@ export function EnhancedTable(props: EnhancedTableProps) {
         control={<Switch checked={dense} onChange={handleChangeDense} color="primary" />}
         label="Dense padding"
       />
+      <FormDialog data={dataDialog} setOpen={setOpen} open={open} />
       {/* <Dialog
         open={open}
         onClose={handleClose}

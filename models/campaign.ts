@@ -9,8 +9,9 @@ export interface Campaign {
   numberOfVoucher: number
   action: string
   games: Array<string>
-  nameOfShop: string
+  counterpartID: any
   image: string
+  nameOfShop: string
 }
 
 export interface CampaignImage {

@@ -1,7 +1,9 @@
 import { EnhancedTable } from '@/components/campaigns'
 import { MainLayout } from '@/components/layout'
-import { headCells } from '@/constants'
+import { EnhancedTableUser } from '@/components/users'
+import { headCells, userCell } from '@/constants'
 import { useCampaign } from '@/hooks'
+import { useUser } from '@/hooks/useUser'
 import AddIcon from '@mui/icons-material/Add'
 import { Box, Button, Divider, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
@@ -11,13 +13,13 @@ export interface CampaignsScreenProps {}
 
 function CampaignsScreen(props: CampaignsScreenProps) {
   const route = useRouter()
-  const { data, getAllCampaigns } = useCampaign()
+  const { data, getAllUsers } = useUser()
   useEffect(() => {
     const fetchData = async () => {
-      await getAllCampaigns()
+      await getAllUsers()
     }
     fetchData()
-  }, [getAllCampaigns])
+  }, [getAllUsers])
   console.log(data)
   return (
     <Box>
@@ -35,7 +37,7 @@ function CampaignsScreen(props: CampaignsScreenProps) {
         </Button>
       </Box>
       <Divider />
-      <EnhancedTable headCells={headCells} campaignList={data?.data.campaigns || []} />
+      <EnhancedTableUser headCells={userCell} userList={data?.data.users || []} />
     </Box>
   )
 }

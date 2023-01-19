@@ -13,6 +13,14 @@ export function useCampaign() {
     // mutate([...data, newCampaign])
   }
 
+  async function updateCampaign(body: any) {
+    const object = JSON.parse(JSON.stringify(Object.fromEntries(body)))
+    const item = data.data.campaigns.findIndex((obj: any) => obj._id === object.id)
+    data.data.campaigns[item].status = 'HAPPENING'
+    await campaignApi.updateCampaign(body)
+    mutate(data, true)
+  }
+
   // async function updateCampaigns(payload: any, values: any) {
   //   await campaignApi.updateCampaigns(payload)
   //   await mutate([...data.data.campaigns, values], true)
@@ -36,6 +44,7 @@ export function useCampaign() {
     data,
     error,
     getAllCampaigns,
+    updateCampaign,
     // updateCampaigns,
     // deleteSingleCampaigns,
     // deleteMultipleCampaigns,

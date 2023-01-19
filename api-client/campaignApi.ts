@@ -1,8 +1,8 @@
 import axiosClient from './axiosClient'
 
 export const campaignApi = {
-  create(payload: any) {
-    return axiosClient.post('/campaigns', payload)
+  updateCampaign(data: any) {
+    return axiosClient.post('admin/campaigns', data)
   },
   getAllCampaigns() {
     return axiosClient.get('/admin/campaigns')

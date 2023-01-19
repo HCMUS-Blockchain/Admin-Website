@@ -1,6 +1,6 @@
-import { EmployeeHeadCell } from '@/models'
+import { HeadCellUser } from '@/models'
 
-export const employeeCell: EmployeeHeadCell[] = [
+export const userCell: HeadCellUser[] = [
   {
     id: '_id',
     numeric: false,
@@ -8,16 +8,16 @@ export const employeeCell: EmployeeHeadCell[] = [
     label: 'ID',
   },
   {
-    id: 'name',
+    id: 'avatar',
     numeric: false,
     disablePadding: false,
-    label: 'Name',
+    label: 'Avatar',
   },
   {
-    id: 'phone',
+    id: 'fullName',
     numeric: false,
     disablePadding: false,
-    label: 'Phone',
+    label: 'Full Name',
   },
   {
     id: 'email',
@@ -27,10 +27,10 @@ export const employeeCell: EmployeeHeadCell[] = [
   },
 
   {
-    id: 'position',
+    id: 'role',
     numeric: false,
     disablePadding: false,
-    label: 'Position',
+    label: 'Role',
   },
   {
     id: 'action',

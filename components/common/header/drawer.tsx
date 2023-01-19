@@ -37,9 +37,9 @@ const drawerList = [
     ref: '/stores',
   },
   {
-    title: 'Employees',
+    title: 'Accounts',
     icon: <BadgeOutlinedIcon />,
-    ref: '/employees',
+    ref: '/accounts',
   },
   {
     title: 'Games',
