@@ -2,6 +2,7 @@ import { useUser } from '@/hooks/useUser'
 import defaultImage from '@/images/default_image.png'
 import { EnhancedTableHeadUserProps, EnhancedTableUserProps, User } from '@/models'
 import { Order } from '@/models/campaign'
+import { Counterpart, EnhancedTableHeadCounterpartProps } from '@/models/counterpart'
 import { getComparator, stableSort } from '@/utils/campaigns'
 import BlockIcon from '@mui/icons-material/Block'
 import {
@@ -27,13 +28,14 @@ import {
   Tooltip,
 } from '@mui/material'
 import { visuallyHidden } from '@mui/utils'
-
+import { counterpartCell } from '@/constants'
 import Image from 'next/image'
 import * as React from 'react'
+import { useCounterpart } from '@/hooks'
 
-function EnhancedTableHead(props: EnhancedTableHeadUserProps) {
+function EnhancedTableHead(props: EnhancedTableHeadCounterpartProps) {
   const { order, orderBy, numSelected, rowCount, onRequestSort, headCells } = props
-  const createSortHandler = (property: keyof User) => (event: React.MouseEvent<unknown>) => {
+  const createSortHandler = (property: keyof Counterpart) => (event: React.MouseEvent<unknown>) => {
     onRequestSort(event, property)
   }
 
@@ -67,22 +69,28 @@ function EnhancedTableHead(props: EnhancedTableHeadUserProps) {
   )
 }
 
-export function EnhancedTableUser(props: EnhancedTableUserProps) {
+export function EnhancedTableCounterpart() {
   const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<keyof User>('_id')
+  const [orderBy, setOrderBy] = React.useState<keyof Counterpart>('_id')
   const [selected, setSelected] = React.useState<string[]>([])
   const [page, setPage] = React.useState(0)
   const [dense, setDense] = React.useState(false)
   const [open, setOpen] = React.useState(false)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
-  const [data, setData] = React.useState({
+  const [counterparts, setCounterparts] = React.useState([])
+  const [temp, setTemp] = React.useState({
     id: '',
     isBlock: false,
   })
-  const { headCells, userList } = props
-  const { updateUser } = useUser()
+
+  const { data, updateCounterpart } = useCounterpart()
+  React.useEffect(() => {
+    if (data) {
+      setCounterparts(data.data.counterparts)
+    }
+  }, [data])
   const handleDialog = async (id: string, isBlock: boolean) => {
-    setData({
+    setTemp({
       id,
       isBlock,
     })
@@ -91,16 +99,16 @@ export function EnhancedTableUser(props: EnhancedTableUserProps) {
 
   const handleAgree = async () => {
     const formData = new FormData()
-    formData.append('id', data.id)
-    formData.append('isBlock', data.isBlock.toString())
+    formData.append('id', temp.id)
+    formData.append('isBlock', temp.isBlock.toString())
     setOpen(false)
-    await updateUser(formData)
+    await updateCounterpart(formData)
   }
   const handleClose = () => {
     setOpen(false)
   }
 
-  const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof User) => {
+  const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Counterpart) => {
     const isAsc = orderBy === property && order === 'asc'
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
@@ -121,7 +129,7 @@ export function EnhancedTableUser(props: EnhancedTableUserProps) {
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - counterparts.length) : 0
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -137,11 +145,11 @@ export function EnhancedTableUser(props: EnhancedTableUserProps) {
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
-              rowCount={userList.length}
-              headCells={headCells}
+              rowCount={counterparts.length}
+              headCells={counterpartCell}
             />
             <TableBody>
-              {stableSort(userList, getComparator(order, orderBy))
+              {stableSort(counterparts, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row: any, index) => {
                   const isItemSelected = isSelected(row._id.toString())
@@ -165,28 +173,28 @@ export function EnhancedTableUser(props: EnhancedTableUserProps) {
                         {row._id.toString().slice(-5)}
                       </TableCell>
                       <TableCell align="center">
-                        {row.avatar ? (
+                        {row.image ? (
                           <Image
-                            src={row.avatar.toString() || ''}
-                            width={50}
-                            height={50}
+                            src={row.image.toString() || ''}
+                            width={40}
+                            height={40}
                             alt="image"
                             style={{ borderRadius: '50%' }}
                           />
                         ) : (
                           <Image
                             src={defaultImage}
-                            width={50}
-                            height={50}
+                            width={40}
+                            height={40}
                             alt="image"
                             style={{ borderRadius: '50%' }}
                           />
                         )}
                       </TableCell>
 
-                      <TableCell align="center">{row.fullName}</TableCell>
-                      <TableCell align="center">{row.email}</TableCell>
-                      <TableCell align="center">{row.role}</TableCell>
+                      <TableCell align="center">{row.nameOfShop}</TableCell>
+                      <TableCell align="center">{row.phone}</TableCell>
+                      <TableCell align="center">{row.headquarter}</TableCell>
                       <TableCell align="center">
                         {row.isBlock ? (
                           <Tooltip title="Unblock">
@@ -226,7 +234,7 @@ export function EnhancedTableUser(props: EnhancedTableUserProps) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={userList.length}
+          count={counterparts.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -243,21 +251,21 @@ export function EnhancedTableUser(props: EnhancedTableUserProps) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        {data.isBlock.toString() === 'true' ? (
+        {temp.isBlock.toString() === 'true' ? (
           <>
-            <DialogTitle id="alert-dialog-title">Block account</DialogTitle>
+            <DialogTitle id="alert-dialog-title">Block counterpart</DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                Do you want to block this account ?
+                Do you want to block this counterpart ?
               </DialogContentText>
             </DialogContent>
           </>
         ) : (
           <>
-            <DialogTitle id="alert-dialog-title">Unblock account</DialogTitle>
+            <DialogTitle id="alert-dialog-title">Unblock counterpart</DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                Do you want to unblock this account ?
+                Do you want to unblock this counterpart ?
               </DialogContentText>
             </DialogContent>
           </>

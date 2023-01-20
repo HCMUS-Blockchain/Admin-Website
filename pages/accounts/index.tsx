@@ -1,8 +1,6 @@
-import { EnhancedTable } from '@/components/campaigns'
 import { MainLayout } from '@/components/layout'
 import { EnhancedTableUser } from '@/components/users'
-import { headCells, userCell } from '@/constants'
-import { useCampaign } from '@/hooks'
+import { userCell } from '@/constants'
 import { useUser } from '@/hooks/useUser'
 import AddIcon from '@mui/icons-material/Add'
 import { Box, Button, Divider, Typography } from '@mui/material'
@@ -20,7 +18,6 @@ function CampaignsScreen(props: CampaignsScreenProps) {
     }
     fetchData()
   }, [getAllUsers])
-  console.log(data)
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>

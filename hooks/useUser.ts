@@ -12,9 +12,19 @@ export function useUser() {
     // mutate([...data, newCampaign])
   }
 
+  async function updateUser(payload: any) {
+    const object = JSON.parse(JSON.stringify(Object.fromEntries(payload)))
+    const item = data.data.users.findIndex((obj: any) => obj._id === object.id)
+    data.data.users[item].isBlock = object.isBlock === 'true'
+    console.log(data)
+    await userApi.updateUser(payload)
+    mutate(data, true)
+  }
+
   return {
     data,
     error,
     getAllUsers,
+    updateUser,
   }
 }

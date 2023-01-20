@@ -42,9 +42,9 @@ const drawerList = [
     ref: '/accounts',
   },
   {
-    title: 'Games',
+    title: 'Counterparts',
     icon: <SportsEsportsOutlinedIcon />,
-    ref: '/games',
+    ref: '/counterparts',
   },
 ]
 export const drawer = (
