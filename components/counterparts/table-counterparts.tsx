@@ -1,20 +1,30 @@
-import { useUser } from '@/hooks/useUser'
+import { storeApi } from '@/api-client'
+import { counterpartCell } from '@/constants'
+import { useCounterpart } from '@/hooks'
 import defaultImage from '@/images/default_image.png'
-import { EnhancedTableHeadUserProps, EnhancedTableUserProps, User } from '@/models'
 import { Order } from '@/models/campaign'
 import { Counterpart, EnhancedTableHeadCounterpartProps } from '@/models/counterpart'
 import { getComparator, stableSort } from '@/utils/campaigns'
 import BlockIcon from '@mui/icons-material/Block'
+import InfoIcon from '@mui/icons-material/Info'
 import {
+  Avatar,
   Box,
+  Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Divider,
   FormControlLabel,
   IconButton,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
   Paper,
+  Stack,
   Switch,
   Table,
   TableBody,
@@ -23,16 +33,13 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Button,
   TableSortLabel,
   Tooltip,
+  Typography,
 } from '@mui/material'
 import { visuallyHidden } from '@mui/utils'
-import { counterpartCell } from '@/constants'
 import Image from 'next/image'
 import * as React from 'react'
-import { useCounterpart } from '@/hooks'
-
 function EnhancedTableHead(props: EnhancedTableHeadCounterpartProps) {
   const { order, orderBy, numSelected, rowCount, onRequestSort, headCells } = props
   const createSortHandler = (property: keyof Counterpart) => (event: React.MouseEvent<unknown>) => {
@@ -76,12 +83,14 @@ export function EnhancedTableCounterpart() {
   const [page, setPage] = React.useState(0)
   const [dense, setDense] = React.useState(false)
   const [open, setOpen] = React.useState(false)
+  const [openStore, setOpenStore] = React.useState(false)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
   const [counterparts, setCounterparts] = React.useState([])
   const [temp, setTemp] = React.useState({
     id: '',
     isBlock: false,
   })
+  const [stores, setStores] = React.useState<any>([])
 
   const { data, updateCounterpart } = useCounterpart()
   React.useEffect(() => {
@@ -131,6 +140,19 @@ export function EnhancedTableCounterpart() {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - counterparts.length) : 0
 
+  const handleDetail = async (id: string) => {
+    try {
+      setStores([])
+      const result = await storeApi.getStore(id)
+      setStores(result.data.stores)
+      setOpenStore(true)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  const handleStoreClose = () => {
+    setOpenStore(false)
+  }
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
@@ -197,23 +219,43 @@ export function EnhancedTableCounterpart() {
                       <TableCell align="center">{row.headquarter}</TableCell>
                       <TableCell align="center">
                         {row.isBlock ? (
-                          <Tooltip title="Unblock">
-                            <IconButton
-                              onClick={() => handleDialog(row._id.toString(), false)}
-                              color="warning"
-                            >
-                              <BlockIcon sx={{ p: 0, color: 'gray' }} />
-                            </IconButton>
-                          </Tooltip>
+                          <>
+                            <Tooltip title="Unblock">
+                              <IconButton
+                                onClick={() => handleDialog(row._id.toString(), false)}
+                                color="warning"
+                              >
+                                <BlockIcon sx={{ p: 0, color: 'gray' }} />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Detail">
+                              <IconButton
+                                onClick={() => handleDetail(row._id.toString())}
+                                color="warning"
+                              >
+                                <InfoIcon sx={{ p: 0, color: 'gray' }} />
+                              </IconButton>
+                            </Tooltip>
+                          </>
                         ) : (
-                          <Tooltip title="Block">
-                            <IconButton
-                              onClick={() => handleDialog(row._id.toString(), true)}
-                              color="warning"
-                            >
-                              <BlockIcon sx={{ p: 0, color: 'red' }} />
-                            </IconButton>
-                          </Tooltip>
+                          <>
+                            <Tooltip title="Block">
+                              <IconButton
+                                onClick={() => handleDialog(row._id.toString(), true)}
+                                color="warning"
+                              >
+                                <BlockIcon sx={{ p: 0, color: 'red' }} />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Detail">
+                              <IconButton
+                                onClick={() => handleDetail(row._id.toString())}
+                                color="warning"
+                              >
+                                <InfoIcon sx={{ p: 0, color: 'gray' }} />
+                              </IconButton>
+                            </Tooltip>
+                          </>
                         )}
                       </TableCell>
                     </TableRow>
@@ -276,6 +318,108 @@ export function EnhancedTableCounterpart() {
           <Button onClick={handleAgree} autoFocus>
             Agree
           </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openStore}
+        onClose={handleStoreClose}
+        scroll="paper"
+        aria-labelledby="scroll-dialog-title"
+        aria-describedby="scroll-dialog-description"
+      >
+        <DialogTitle id="scroll-dialog-title">Brands</DialogTitle>
+        <DialogContent dividers={true}>
+          <List
+            sx={{
+              width: '100%',
+              maxWidth: 360,
+              bgcolor: 'background.paper',
+              maxHeight: '600px',
+              overflow: 'auto',
+            }}
+          >
+            {stores.length > 0 ? (
+              stores.map((item: any) => (
+                <Stack
+                  direction="row"
+                  width="100%"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  key={item.title}
+                >
+                  <Box key={item._id} width="100%">
+                    <ListItem alignItems="flex-start">
+                      <ListItemAvatar>
+                        <Avatar alt="Remy Sharp" src={item.image} />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          <Typography
+                            sx={{
+                              display: 'block',
+                              overflow: ' hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              width: '210px',
+                              cursor: 'pointer',
+                            }}
+                            component="span"
+                            color="text.primary"
+                          >
+                            {item.title}
+                          </Typography>
+                        }
+                        secondary={
+                          <React.Fragment>
+                            <Typography
+                              sx={{ display: 'block' }}
+                              variant="body2"
+                              component="span"
+                              color="text.primary"
+                            >
+                              {item.description.split('\n')[0]}
+                            </Typography>
+                            <Typography
+                              sx={{
+                                display: 'block',
+                                overflow: ' hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                                width: '210px',
+                              }}
+                              variant="body2"
+                              component="span"
+                              color="text.primary"
+                            >
+                              {item.description.split('\n')[1]}
+                            </Typography>
+                          </React.Fragment>
+                        }
+                      />
+                    </ListItem>
+
+                    <Divider />
+                  </Box>
+                </Stack>
+              ))
+            ) : (
+              <Box width="100%">
+                <ListItem alignItems="flex-start">
+                  <ListItemText
+                    primary={
+                      <Typography component="span" color="text.primary">
+                        This counterpart does not any brands !!
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+              </Box>
+            )}
+          </List>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleStoreClose}>Cancel</Button>
         </DialogActions>
       </Dialog>
     </Box>

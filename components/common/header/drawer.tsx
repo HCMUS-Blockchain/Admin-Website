@@ -32,18 +32,13 @@ const drawerList = [
     ref: '/campaigns',
   },
   {
-    title: 'Stores',
-    icon: <StoreOutlinedIcon />,
-    ref: '/stores',
-  },
-  {
     title: 'Accounts',
     icon: <BadgeOutlinedIcon />,
     ref: '/accounts',
   },
   {
     title: 'Counterparts',
-    icon: <SportsEsportsOutlinedIcon />,
+    icon: <StoreOutlinedIcon />,
     ref: '/counterparts',
   },
 ]
