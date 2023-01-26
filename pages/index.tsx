@@ -17,7 +17,14 @@ import { Box } from '@mui/system'
 import { statisticApi } from '@/api-client'
 import React, { useState, useEffect } from 'react'
 import { filter, generalManagement } from '@/constants'
-import { Item, TypoItem } from '@/components/dashboard'
+import {
+  CampaignComponent,
+  DashboardComponent,
+  DoughnutChart,
+  Item,
+  TypoItem,
+  VerticalBarChart,
+} from '@/components/dashboard'
 
 export function Home() {
   const [option, setOption] = useState('day')
@@ -42,7 +49,7 @@ export function Home() {
   }, [])
   console.log(data)
   return (
-    <Stack>
+    <Stack spacing={2}>
       <Paper>
         <Box
           sx={{ display: 'flex', justifyContent: 'space-between', p: 2, alignContent: 'center' }}
@@ -138,6 +145,35 @@ export function Home() {
               ))}
         </Grid>
       </Paper>
+      <Paper>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 4 }}>
+          <Box>
+            <Stack direction="row" justifyContent="space-between">
+              <Box
+                sx={{ display: 'flex', alignContent: 'center', justifyContent: 'space-between' }}
+                alignSelf="center"
+              >
+                <IconButton disabled>
+                  <StarIcon />
+                </IconButton>
+                <Typography variant="h6" alignSelf="center">
+                  Game Statistic
+                </Typography>
+              </Box>
+            </Stack>
+
+            <DoughnutChart />
+          </Box>
+          <Box>
+            <VerticalBarChart />
+          </Box>
+        </Box>
+      </Paper>
+      <DashboardComponent id="Voucher" />
+      <DashboardComponent id="User" />
+      <Box>
+        <CampaignComponent />
+      </Box>
     </Stack>
   )
 }
