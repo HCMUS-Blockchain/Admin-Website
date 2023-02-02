@@ -27,5 +27,4 @@ export interface EnhancedTableHeadUserProps {
 
 export interface EnhancedTableUserProps {
   headCells: Array<HeadCellUser>
-  userList: any
 }

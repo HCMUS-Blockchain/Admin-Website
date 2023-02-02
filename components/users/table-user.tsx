@@ -3,17 +3,24 @@ import defaultImage from '@/images/default_image.png'
 import { EnhancedTableHeadUserProps, EnhancedTableUserProps, User } from '@/models'
 import { Order } from '@/models/campaign'
 import { getComparator, stableSort } from '@/utils/campaigns'
+import { Search, SearchIconWrapper, StyledInputBase } from '@/utils/campaigns/styles'
 import BlockIcon from '@mui/icons-material/Block'
+import FilterListIcon from '@mui/icons-material/FilterList'
+import SearchIcon from '@mui/icons-material/Search'
 import {
   Box,
+  Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControl,
   FormControlLabel,
   IconButton,
   Paper,
+  Popover,
+  Stack,
   Switch,
   Table,
   TableBody,
@@ -22,14 +29,17 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Button,
   TableSortLabel,
+  Toolbar,
   Tooltip,
+  Typography,
 } from '@mui/material'
 import { visuallyHidden } from '@mui/utils'
 
 import Image from 'next/image'
 import * as React from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
+import CheckboxesGroup from '../form/check-box-field'
 
 function EnhancedTableHead(props: EnhancedTableHeadUserProps) {
   const { order, orderBy, numSelected, rowCount, onRequestSort, headCells } = props
@@ -67,6 +77,120 @@ function EnhancedTableHead(props: EnhancedTableHeadUserProps) {
   )
 }
 
+function EnhancedTableToolbar({ setAccounts }: { setAccounts: any }) {
+  // const { numSelected, selected, setSelected, setCampaigns } = props
+  const [open, setOpen] = React.useState(false)
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+  const openPopover = Boolean(anchorEl)
+  const id = openPopover ? 'simple-popover' : undefined
+  const methods = useForm()
+
+  const { register, handleSubmit, setValue } = methods
+  const { data, searchUser } = useUser()
+  const handleClickOpen = () => {
+    setOpen(true)
+  }
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+  }
+
+  const handleSearch = async (e: any) => {
+    if (e.key === 'Enter') {
+      await searchUser({ keyword: e.target.value })
+    }
+  }
+
+  const handleSubmitFilter = (e: any) => {
+    let result = data.data.users
+    if (e.status) {
+      const temp = e.status.map((item: string) => {
+        return item.toUpperCase()
+      })
+
+      result = result.filter(
+        (item: any) => item.role !== undefined && temp.includes(item.role.toString().toUpperCase())
+      )
+    }
+    setAccounts(result)
+    setAnchorEl(null)
+  }
+
+  const handleReset = () => {
+    setValue('status', undefined)
+    setAccounts(data.data.users)
+    setAnchorEl(null)
+  }
+  return (
+    <Toolbar
+      sx={{
+        pl: { sm: 2 },
+        pr: { xs: 1, sm: 1 },
+      }}
+    >
+      <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
+        Account List
+      </Typography>
+      <Search>
+        <SearchIconWrapper>
+          <SearchIcon />
+        </SearchIconWrapper>
+        <StyledInputBase
+          placeholder="Search…"
+          inputProps={{ 'aria-label': 'search' }}
+          onKeyDown={(e: any) => handleSearch(e)}
+        />
+      </Search>
+
+      <Box>
+        <Tooltip title="Filter list">
+          <IconButton onClick={handleClick}>
+            <FilterListIcon />
+          </IconButton>
+        </Tooltip>
+        <Popover
+          id={id}
+          open={openPopover}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+        >
+          <FormProvider {...methods}>
+            <FormControl sx={{ m: 3 }} component="form" variant="standard">
+              <CheckboxesGroup
+                name="status"
+                control={methods.control}
+                label="Status"
+                data={['Counterpart', 'User']}
+                required={false}
+              />
+
+              <Stack direction="row" sx={{ mt: 1 }} spacing={1}>
+                <Button variant="outlined" onClick={handleReset}>
+                  Reset
+                </Button>
+                <Button variant="outlined" onClick={handleSubmit(handleSubmitFilter)} type="submit">
+                  Filter
+                </Button>
+              </Stack>
+            </FormControl>
+          </FormProvider>
+        </Popover>
+      </Box>
+    </Toolbar>
+  )
+}
+
 export function EnhancedTableUser(props: EnhancedTableUserProps) {
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof User>('_id')
@@ -75,11 +199,13 @@ export function EnhancedTableUser(props: EnhancedTableUserProps) {
   const [dense, setDense] = React.useState(false)
   const [open, setOpen] = React.useState(false)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
+  const { data: users } = useUser()
+  const [accounts, setAccounts] = React.useState([])
   const [data, setData] = React.useState({
     id: '',
     isBlock: false,
   })
-  const { headCells, userList } = props
+  const { headCells } = props
   const { updateUser } = useUser()
   const handleDialog = async (id: string, isBlock: boolean) => {
     setData({
@@ -88,6 +214,12 @@ export function EnhancedTableUser(props: EnhancedTableUserProps) {
     })
     setOpen(true)
   }
+
+  React.useEffect(() => {
+    if (users) {
+      setAccounts(users.data.users)
+    }
+  }, [users])
 
   const handleAgree = async () => {
     const formData = new FormData()
@@ -121,11 +253,12 @@ export function EnhancedTableUser(props: EnhancedTableUserProps) {
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - accounts.length) : 0
 
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
+        <EnhancedTableToolbar setAccounts={setAccounts} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -137,11 +270,11 @@ export function EnhancedTableUser(props: EnhancedTableUserProps) {
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
-              rowCount={userList.length}
+              rowCount={accounts.length}
               headCells={headCells}
             />
             <TableBody>
-              {stableSort(userList, getComparator(order, orderBy))
+              {stableSort(accounts, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row: any, index) => {
                   const isItemSelected = isSelected(row._id.toString())
@@ -226,7 +359,7 @@ export function EnhancedTableUser(props: EnhancedTableUserProps) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={userList.length}
+          count={accounts.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

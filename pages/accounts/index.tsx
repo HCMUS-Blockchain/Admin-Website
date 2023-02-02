@@ -11,18 +11,12 @@ export interface CampaignsScreenProps {}
 
 function CampaignsScreen(props: CampaignsScreenProps) {
   const route = useRouter()
-  const { data, getAllUsers } = useUser()
-  useEffect(() => {
-    const fetchData = async () => {
-      await getAllUsers()
-    }
-    fetchData()
-  }, [getAllUsers])
+
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
         <Typography component="h2" variant="h5">
-          Campaigns
+          Accounts
         </Typography>
         <Button
           variant="contained"
@@ -34,7 +28,7 @@ function CampaignsScreen(props: CampaignsScreenProps) {
         </Button>
       </Box>
       <Divider />
-      <EnhancedTableUser headCells={userCell} userList={data?.data.users || []} />
+      <EnhancedTableUser headCells={userCell} />
     </Box>
   )
 }

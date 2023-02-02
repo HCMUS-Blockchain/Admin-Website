@@ -12,13 +12,7 @@ export interface CampaignsScreenProps {}
 function CampaignsScreen(props: CampaignsScreenProps) {
   const route = useRouter()
   const { data, getAllCampaigns } = useCampaign()
-  useEffect(() => {
-    const fetchData = async () => {
-      await getAllCampaigns()
-    }
-    fetchData()
-  }, [getAllCampaigns])
-  console.log(data)
+
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
@@ -35,7 +29,7 @@ function CampaignsScreen(props: CampaignsScreenProps) {
         </Button>
       </Box>
       <Divider />
-      <EnhancedTable headCells={headCells} campaignList={data?.data.campaigns || []} />
+      <EnhancedTable headCells={headCells} />
     </Box>
   )
 }

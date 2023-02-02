@@ -6,12 +6,13 @@ export interface Campaign {
   dateEnd: number
   description: string
   status: string
-  numberOfVoucher: number
+  typeOfRandom: string
   action: string
   games: Array<string>
   counterpartID: any
   image: string
   nameOfShop: string
+  remainingVoucher: number
 }
 
 export interface CampaignImage {
@@ -43,6 +44,7 @@ export interface EnhancedTableToolbarProps {
   numSelected: number
   selected: Array<string>
   setSelected: any
+  setCampaigns: any
 }
 
 export enum statusCampaign {
@@ -54,5 +56,4 @@ export enum statusCampaign {
 
 export interface EnhancedTableProps {
   headCells: Array<HeadCell>
-  campaignList: any
 }

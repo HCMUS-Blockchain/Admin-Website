@@ -44,10 +44,16 @@ export const headCells: HeadCell[] = [
     label: 'Status',
   },
   {
-    id: 'numberOfVoucher',
+    id: 'typeOfRandom',
     numeric: true,
     disablePadding: false,
-    label: 'Quantity',
+    label: 'Random Method',
+  },
+  {
+    id: 'remainingVoucher',
+    numeric: true,
+    disablePadding: false,
+    label: 'Remaining Vouchers',
   },
   {
     id: 'action',

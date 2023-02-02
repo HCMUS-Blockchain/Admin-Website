@@ -1,29 +1,10 @@
-import React from 'react'
-import { useForm, FormProvider } from 'react-hook-form'
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Typography,
-  FormControl,
-  FormControlLabel,
-  Checkbox,
-  Stack,
-  TextField,
-  Link,
-  Avatar,
-  CssBaseline,
-} from '@mui/material'
-import { InputField } from '../form'
-import GoogleLogo from '@/images/google.svg'
-import GitHubLogo from '@/images/github.svg'
-import { OauthMuiLink } from '@/utils/login'
-import Image from 'next/image'
 import { useAuth } from '@/hooks'
+import { RegisterPayload } from '@/models'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import { LoginPayload, RegisterPayload } from '@/models'
+import { Avatar, Box, Button, Container, CssBaseline, Grid, Link, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
+import { FormProvider, useForm } from 'react-hook-form'
+import { InputField } from '../form'
 
 export function RegisterForm() {
   const methods = useForm({

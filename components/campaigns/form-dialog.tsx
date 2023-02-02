@@ -85,13 +85,14 @@ export function FormDialog({ data, open, setOpen }: any) {
             </Box>
 
             <Paper sx={{ display: 'flex', direction: 'row', justifyContent: 'space-around' }}>
-              <Stack spacing={2}>
+              <Stack spacing={2} width="350px">
                 <Typography fontWeight="bold" fontSize="lg">
                   CAMPAIGN INFORMATION
                 </Typography>
                 <Typography>Name: {data.name}</Typography>
                 <Typography>Description: {data.description}</Typography>
-                <Typography>Total vouchers: {data.numberOfVoucher}</Typography>
+                <Typography>Initial vouchers: {data.numberOfVoucher}</Typography>
+                <Typography>Remaining vouchers: {data.remainingVoucher}</Typography>
                 <Typography>Start Date: {dayjs(data.dateBegin).toString()}</Typography>
                 <Typography>
                   End Date: {dayjs(data.dateEnd).format('DD/MM/YYYY HH:MM:ss')}
@@ -157,7 +158,11 @@ export function FormDialog({ data, open, setOpen }: any) {
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={() => handleAccept(data._id.toString())}>Accept</Button>
+            {data.status === 'PENDING' ? (
+              <Button onClick={() => handleAccept(data._id.toString())}>Accept</Button>
+            ) : (
+              <Button disabled>Accept</Button>
+            )}
           </DialogActions>
         </Dialog>
       )}

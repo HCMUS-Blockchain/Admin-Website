@@ -1,3 +1,4 @@
+import { searchApi } from '@/api-client'
 import { userApi } from '@/api-client/userApi'
 import useSWR from 'swr'
 export function useUser() {
@@ -10,6 +11,11 @@ export function useUser() {
     await userApi.getAllUsers()
     // await mutate()
     // mutate([...data, newCampaign])
+  }
+
+  async function searchUser(payload: any) {
+    const result = await searchApi.searchUser(payload)
+    mutate(result, false) // await mutate()
   }
 
   async function updateUser(payload: any) {
@@ -26,5 +32,6 @@ export function useUser() {
     error,
     getAllUsers,
     updateUser,
+    searchUser,
   }
 }
