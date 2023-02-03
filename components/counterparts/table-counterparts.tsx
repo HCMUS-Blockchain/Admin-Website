@@ -35,11 +35,15 @@ import {
   TableRow,
   TableSortLabel,
   Tooltip,
+  Toolbar,
   Typography,
 } from '@mui/material'
 import { visuallyHidden } from '@mui/utils'
 import Image from 'next/image'
 import * as React from 'react'
+import { Search, SearchIconWrapper, StyledInputBase } from '@/utils/campaigns/styles'
+import SearchIcon from '@mui/icons-material/Search'
+
 function EnhancedTableHead(props: EnhancedTableHeadCounterpartProps) {
   const { order, orderBy, numSelected, rowCount, onRequestSort, headCells } = props
   const createSortHandler = (property: keyof Counterpart) => (event: React.MouseEvent<unknown>) => {
@@ -73,6 +77,38 @@ function EnhancedTableHead(props: EnhancedTableHeadCounterpartProps) {
         ))}
       </TableRow>
     </TableHead>
+  )
+}
+function EnhancedTableToolbar() {
+  const { searchCounterpart } = useCounterpart()
+  const handleSearch = async (e: any) => {
+    if (e.key === 'Enter') {
+      await searchCounterpart({ keyword: e.target.value })
+    }
+  }
+
+  return (
+    <Toolbar
+      sx={{
+        pl: { sm: 2 },
+        pr: { xs: 1, sm: 1 },
+      }}
+    >
+      <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
+        Counterpart List
+      </Typography>
+
+      <Search>
+        <SearchIconWrapper>
+          <SearchIcon />
+        </SearchIconWrapper>
+        <StyledInputBase
+          placeholder="Search name, phone or headquarter..."
+          inputProps={{ 'aria-label': 'search' }}
+          onKeyDown={(e: any) => handleSearch(e)}
+        />
+      </Search>
+    </Toolbar>
   )
 }
 
@@ -156,6 +192,7 @@ export function EnhancedTableCounterpart() {
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
+        <EnhancedTableToolbar />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}

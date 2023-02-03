@@ -21,6 +21,11 @@
       "@/api/*": ["./api-client/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "../../NextJSExample/my-app/components/common/notification.tsx"
+  ],
   "exclude": ["node_modules"]
 }

@@ -1,4 +1,4 @@
-import { counterpartApi } from '@/api-client'
+import { counterpartApi, searchApi } from '@/api-client'
 import { userApi } from '@/api-client/userApi'
 import useSWR from 'swr'
 export function useCounterpart() {
@@ -13,6 +13,11 @@ export function useCounterpart() {
   //     // mutate([...data, newCampaign])
   //   }
 
+  async function searchCounterpart(payload: any) {
+    const result = await searchApi.searchCounterpart(payload)
+    mutate(result, false)
+  }
+
   async function updateCounterpart(payload: any) {
     const object = JSON.parse(JSON.stringify(Object.fromEntries(payload)))
     const item = data.data.counterparts.findIndex((obj: any) => obj._id === object.id)
@@ -25,5 +30,6 @@ export function useCounterpart() {
     data,
     error,
     updateCounterpart,
+    searchCounterpart,
   }
 }

@@ -139,7 +139,7 @@ function EnhancedTableToolbar({ setAccounts }: { setAccounts: any }) {
           <SearchIcon />
         </SearchIconWrapper>
         <StyledInputBase
-          placeholder="Search…"
+          placeholder="Search full name or email..."
           inputProps={{ 'aria-label': 'search' }}
           onKeyDown={(e: any) => handleSearch(e)}
         />

@@ -142,14 +142,7 @@ export function HeaderComponent(props: Props) {
             }}
           >
             <Stack direction="row">
-              <Box sx={{ alignSelf: 'center', ml: 4 }}>
-                <Search>
-                  <SearchIconWrapper>
-                    <SearchIcon />
-                  </SearchIconWrapper>
-                  <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
-                </Search>
-              </Box>
+              <Box sx={{ alignSelf: 'center', ml: 4 }}></Box>
             </Stack>
             <Stack direction="row">
               <Box sx={{ alignSelf: 'center', mr: 2 }}>

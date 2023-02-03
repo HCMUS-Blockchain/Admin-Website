@@ -1,6 +1,7 @@
 import { useAuth } from '@/hooks'
 import { LoginPayload } from '@/models'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import { LoadingButton } from '@mui/lab'
 import {
   Avatar,
   Box,
@@ -16,6 +17,7 @@ import {
 import { useRouter } from 'next/router'
 import { FormProvider, useForm } from 'react-hook-form'
 import { InputField } from '../form'
+import React, { useState } from 'react'
 export function LoginForm() {
   const methods = useForm({
     defaultValues: {
@@ -23,16 +25,20 @@ export function LoginForm() {
       password: '',
     },
   })
+  const [loading, setLoading] = useState(false)
   const { handleSubmit } = methods
   const { login } = useAuth()
   const route = useRouter()
 
   async function handleLoginSubmit(values: LoginPayload) {
     try {
+      setLoading(true)
       await login(values)
       route.push('/')
     } catch (e) {
       console.log(e)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -41,7 +47,7 @@ export function LoginForm() {
       <Container
         component="main"
         maxWidth="xs"
-        sx={{ height: '65vh', backgroundColor: { xs: '#fff', md: '#f4f4f4' }, borderRadius: '5%' }}
+        sx={{ height: '100%', backgroundColor: { xs: '#fff', md: '#f4f4f4' }, borderRadius: '5%' }}
       >
         <CssBaseline />
         <Box
@@ -86,25 +92,16 @@ export function LoginForm() {
               placeholder="Password"
               autoComplete="current-password"
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+
+            <LoadingButton
+              loading={loading}
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
               Sign In
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/register" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
+            </LoadingButton>
           </Box>
         </Box>
       </Container>

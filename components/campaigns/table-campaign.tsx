@@ -191,7 +191,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
           <SearchIcon />
         </SearchIconWrapper>
         <StyledInputBase
-          placeholder="Search…"
+          placeholder="Search campaign's name or shop..."
           inputProps={{ 'aria-label': 'search' }}
           onKeyDown={(e: any) => handleSearch(e)}
         />
