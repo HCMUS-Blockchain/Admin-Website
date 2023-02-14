@@ -15,8 +15,8 @@ export const generalManagement = [
     value: null,
   },
   {
-    label: 'Accounts',
-    description: 'Total new accounts',
+    label: 'Incomes',
+    description: 'Total incomes',
     value: null,
   },
 ]

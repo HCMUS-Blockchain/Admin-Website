@@ -526,27 +526,6 @@ export function EnhancedTable(props: EnhancedTableProps) {
         label="Dense padding"
       />
       <FormDialog data={dataDialog} setOpen={setOpen} open={open} />
-      {/* <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{'Delete Confirm'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Do you want to delete ?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="secondary">
-            Disagree
-          </Button>
-          <Button onClick={handleDelete} color="secondary" autoFocus>
-            Agree
-          </Button>
-        </DialogActions>
-      </Dialog> */}
     </Box>
   )
 }

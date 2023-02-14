@@ -11,4 +11,7 @@ export const searchApi = {
   searchUser(keyword: any) {
     return axiosClient.get('admin/search/user', { params: keyword })
   },
+  searchPayment(keyword: any) {
+    return axiosClient.get('admin/search/payment', { params: keyword })
+  },
 }

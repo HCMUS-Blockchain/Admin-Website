@@ -54,7 +54,7 @@ function handleData(data: any) {
   return arr
 }
 export function FormDialog({ data, open, setOpen }: any) {
-  const [games, setGames] = useState([])
+  const [games, setGames] = useState<any>([])
   const { updateCampaign } = useCampaign()
   useEffect(() => {
     if (data) {
@@ -142,10 +142,10 @@ export function FormDialog({ data, open, setOpen }: any) {
                           ))}
                         </TableRow>
                         <TableRow>
-                          {games.map((item: any, index) => (
+                          {games[0].point.map((item: any, index: number) => (
                             <React.Fragment key={item.name}>
-                              <TableCell align="center">{item.point[index].discount}</TableCell>
-                              <TableCell align="center">{item.point[index].point}</TableCell>
+                              <TableCell align="center">{item.discount}</TableCell>
+                              <TableCell align="center">{item.point}</TableCell>
                             </React.Fragment>
                           ))}
                         </TableRow>
