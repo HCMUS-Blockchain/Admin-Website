@@ -24,11 +24,19 @@ export function useCampaign() {
     mutate(data, true)
   }
 
+  async function refuseCampaign(body: any) {
+    const object = JSON.parse(JSON.stringify(Object.fromEntries(body)))
+    const item = data.data.campaigns.findIndex((obj: any) => obj._id === object.id)
+    data.data.campaigns[item].status = 'NOT ACCEPTED'
+    await campaignApi.refuseCampaign(body)
+    mutate(data, true)
+  }
   return {
     data,
     error,
     getAllCampaigns,
     updateCampaign,
     searchCampaign,
+    refuseCampaign,
   }
 }

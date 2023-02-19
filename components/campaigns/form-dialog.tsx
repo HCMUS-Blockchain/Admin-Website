@@ -14,62 +14,57 @@ import {
   TableHead,
   TableRow,
   TableCell,
+  TableBody,
+  TextField,
 } from '@mui/material'
 import CheckIcon from '@mui/icons-material/Check'
 import CloseIcon from '@mui/icons-material/Close'
 import Image from 'next/image'
 import dayjs from 'dayjs'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useCampaign } from '@/hooks'
 export interface FormDialogInterface {
   setOpen: any
   open: boolean
   data: any
 }
-function handleData(data: any) {
-  const arr = []
-  for (const key of Object.keys(data)) {
-    if (key === 'game1' && data.game1.length > 0) {
-      arr.push({
-        name: 'Shake',
-        point: data.game1,
-      })
-    } else if (key === 'game2' && data.game2.length > 0) {
-      arr.push({
-        name: '2048',
-        point: data.game2,
-      })
-    } else if (key === 'game3' && data.game3.length > 0) {
-      arr.push({
-        name: 'Fly',
-        point: data.game3,
-      })
-    } else if (key === 'game4' && data.game4.length > 0) {
-      arr.push({
-        name: 'Quiz',
-        point: data.game4,
-      })
-    }
-  }
-  return arr
-}
-export function FormDialog({ data, open, setOpen }: any) {
-  const [games, setGames] = useState<any>([])
-  const { updateCampaign } = useCampaign()
-  useEffect(() => {
-    if (data) {
-      const games: any = handleData(data.gameID.pointAverage)
-      setGames(games)
-      console.log(games)
-    }
-  }, [data])
 
+export function FormDialog({ data, open, setOpen }: any) {
+  const { updateCampaign, refuseCampaign } = useCampaign()
+  const [openDialog, setOpenDialog] = useState(false)
+  const textFieldRef = useRef<any>(null)
   const handleAccept = async (id: string) => {
     try {
       setOpen(false)
       const formData = new FormData()
       formData.append('id', id)
       await updateCampaign(formData)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  const handleRefuse = async (id: string) => {
+    try {
+      setOpenDialog(true)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const handleCancel = () => {
+    setOpenDialog(false)
+  }
+
+  const handleSubmit = async (id: string) => {
+    try {
+      setOpenDialog(false)
+      setOpen(false)
+      const formData = new FormData()
+      formData.append('id', id)
+      if (textFieldRef.current) {
+        formData.append('message', textFieldRef.current.value)
+      }
+      await refuseCampaign(formData)
     } catch (e) {
       console.log(e)
     }
@@ -86,70 +81,130 @@ export function FormDialog({ data, open, setOpen }: any) {
 
             <Paper sx={{ display: 'flex', direction: 'row', justifyContent: 'space-around' }}>
               <Stack spacing={2} width="350px">
-                <Typography fontWeight="bold" fontSize="lg">
+                <Typography fontWeight="bold" variant="h6">
                   CAMPAIGN INFORMATION
                 </Typography>
-                <Typography>Name: {data.name}</Typography>
-                <Typography>Description: {data.description}</Typography>
-                <Typography>Initial vouchers: {data.numberOfVoucher}</Typography>
-                <Typography>Remaining vouchers: {data.remainingVoucher}</Typography>
-                <Typography>Start Date: {dayjs(data.dateBegin).toString()}</Typography>
                 <Typography>
-                  End Date: {dayjs(data.dateEnd).format('DD/MM/YYYY HH:MM:ss')}
+                  <Typography fontWeight="bold" component="span">
+                    Name:
+                  </Typography>{' '}
+                  {data.name}
                 </Typography>
-                <Typography>Random method: {data.typeOfRandom}</Typography>
+                <Typography>
+                  <Typography fontWeight="bold" component="span">
+                    Description:
+                  </Typography>{' '}
+                  {data.description}
+                </Typography>
+                <Typography>
+                  {' '}
+                  <Typography fontWeight="bold" component="span">
+                    Initial Vouchers:
+                  </Typography>{' '}
+                  {data.numberOfVoucher}
+                </Typography>
+                <Typography>
+                  {' '}
+                  <Typography fontWeight="bold" component="span">
+                    Remaining Vouchers:
+                  </Typography>{' '}
+                  {data.remainingVoucher}
+                </Typography>
+                <Typography>
+                  <Typography fontWeight="bold" component="span">
+                    Start Date:
+                  </Typography>{' '}
+                  {dayjs(data.dateBegin).format('DD/MM/YYYY HH:MM:ss')}
+                </Typography>
+                <Typography>
+                  <Typography fontWeight="bold" component="span">
+                    End Date:
+                  </Typography>{' '}
+                  {dayjs(data.dateEnd).format('DD/MM/YYYY HH:MM:ss')}
+                </Typography>
+                <Typography>
+                  {' '}
+                  <Typography fontWeight="bold" component="span">
+                    Random Method:
+                  </Typography>{' '}
+                  {data.typeOfRandom}
+                </Typography>
               </Stack>
               <Stack>
                 <Stack spacing={2}>
-                  <Typography fontWeight="bold" fontSize="lg">
+                  <Typography fontWeight="bold" variant="h6">
                     COUNTERPART INFORMATION
                   </Typography>{' '}
-                  <Typography>Shop: {data.counterpartID.nameOfShop}</Typography>
-                  <Typography>Phone: {data.counterpartID.phone}</Typography>
-                  <Typography>Headquarter: {data.counterpartID.headquarter}</Typography>
+                  <Typography>
+                    {' '}
+                    <Typography fontWeight="bold" component="span">
+                      Shop:{' '}
+                    </Typography>{' '}
+                    {data.counterpartID.nameOfShop}
+                  </Typography>
+                  <Typography>
+                    {' '}
+                    <Typography fontWeight="bold" component="span">
+                      Phone{' '}
+                    </Typography>{' '}
+                    {data.counterpartID.phone}
+                  </Typography>
+                  <Typography>
+                    {' '}
+                    <Typography fontWeight="bold" component="span">
+                      Headquarter:
+                    </Typography>{' '}
+                    {data.counterpartID.headquarter}
+                  </Typography>
                 </Stack>
               </Stack>
               <Stack>
                 <Stack spacing={2}>
-                  <Typography fontWeight="bold" fontSize="lg">
-                    GAME CONFIGURATION
+                  <Typography fontWeight="bold" variant="h6">
+                    DISCOUNT VOUCHER CONFIGURATION
                   </Typography>
                   <Box>
-                    <Typography>Games: </Typography>
+                    <Typography>
+                      {' '}
+                      <Typography fontWeight="bold" component="span">
+                        Games:
+                      </Typography>{' '}
+                    </Typography>
                     <Stack direction="row" spacing={1}>
                       {data.games.map((item: any) => (
                         <Chip label={item} color="primary" variant="outlined" key={item} />
                       ))}
                     </Stack>
                   </Box>
-                  <Typography>Configuration: </Typography>
-                  {games.length > 0 ? (
+                  <Typography>
+                    {' '}
+                    <Typography fontWeight="bold" component="span">
+                      The number of each voucher:
+                    </Typography>{' '}
+                  </Typography>
+                  {data.vouchers.length > 0 ? (
                     <Table>
                       <TableHead>
                         <TableRow>
-                          {games.map((item: any) => (
-                            <TableCell align="center" colSpan={2} key={item.name}>
-                              {item.name}
+                          {['Discount', 'Amount'].map((item: any) => (
+                            <TableCell align="center" colSpan={2} key={item}>
+                              {item}
                             </TableCell>
                           ))}
                         </TableRow>
-                        <TableRow>
-                          {games.map((item: any) => (
-                            <React.Fragment key={item.name}>
-                              <TableCell align="center">Discount</TableCell>
-                              <TableCell align="center">Point</TableCell>
-                            </React.Fragment>
-                          ))}
-                        </TableRow>
-                        <TableRow>
-                          {games[0].point.map((item: any, index: number) => (
-                            <React.Fragment key={item.name}>
-                              <TableCell align="center">{item.discount}</TableCell>
-                              <TableCell align="center">{item.point}</TableCell>
-                            </React.Fragment>
-                          ))}
-                        </TableRow>
                       </TableHead>
+                      <TableBody>
+                        {data.vouchers.map((item: any) => (
+                          <TableRow key={item.discount}>
+                            <TableCell align="center" colSpan={2}>
+                              {item.discount}%
+                            </TableCell>
+                            <TableCell align="center" colSpan={2}>
+                              {item.amount}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
                     </Table>
                   ) : null}
                 </Stack>
@@ -159,13 +214,29 @@ export function FormDialog({ data, open, setOpen }: any) {
           <DialogActions>
             <Button onClick={() => setOpen(false)}>Cancel</Button>
             {data.status === 'PENDING' ? (
-              <Button onClick={() => handleAccept(data._id.toString())}>Accept</Button>
+              <>
+                <Button onClick={() => handleRefuse(data._id.toString())}>Refuse</Button>
+                <Button onClick={() => handleAccept(data._id.toString())}>Accept</Button>
+              </>
             ) : (
-              <Button disabled>Accept</Button>
+              <>
+                <Button disabled>Refuse</Button>
+                <Button disabled>Accept</Button>
+              </>
             )}
           </DialogActions>
         </Dialog>
       )}
+      <Dialog open={openDialog} fullWidth maxWidth="sm">
+        <DialogTitle>Comment</DialogTitle>
+        <DialogContent>
+          <TextField multiline rows="4" fullWidth inputRef={textFieldRef} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleCancel()}>Cancel</Button>
+          <Button onClick={() => handleSubmit(data._id.toString())}>Submit</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   )
 }
