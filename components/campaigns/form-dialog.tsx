@@ -38,7 +38,7 @@ export function FormDialog({ data, open, setOpen }: any) {
       setOpen(false)
       const formData = new FormData()
       formData.append('id', id)
-      await updateCampaign(formData)
+      await updateCampaign(formData, data)
     } catch (e) {
       console.log(e)
     }

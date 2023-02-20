@@ -6,5 +6,5 @@ export const Color: ColorStatus = {
   HAPPENING: '#3B71CA',
   ENDED: '#747474',
   NOT_ACCEPTED: '#EB455F',
-  ACCEPT: '#14A44D',
+  ACCEPTED: '#14A44D',
 }
