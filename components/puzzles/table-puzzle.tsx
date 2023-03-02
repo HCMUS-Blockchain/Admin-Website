@@ -1,4 +1,4 @@
-import { Color } from '@/constants'
+import { Color, puzzleCells } from '@/constants'
 import {
   Campaign,
   EnhancedTableHeadProps,
@@ -48,8 +48,14 @@ import { FormProvider, Controller, useForm } from 'react-hook-form'
 import { DateTimePickerField } from '../form'
 import CheckboxesGroup from '../form/check-box-field'
 import { FormDialog } from './form-dialog'
-import { useCampaign } from '@/hooks'
+import { useCampaign, usePuzzle } from '@/hooks'
 import { CheckEndDate, CheckQuantity, CheckStartDate } from '@/utils/filter'
+import {
+  EnhancedTableHeadPuzzleProps,
+  EnhancedTablePuzzleProps,
+  EnhancedTablePuzzleToolbarProps,
+  Puzzle,
+} from '@/models/puzzle'
 
 const conditions = [
   'Greater than',
@@ -60,7 +66,7 @@ const conditions = [
 
 const status = ['Pending', 'Happening', 'Ended']
 
-function EnhancedTableHead(props: EnhancedTableHeadProps) {
+function EnhancedTableHead(props: EnhancedTableHeadPuzzleProps) {
   const {
     onSelectAllClick,
     order,
@@ -71,7 +77,7 @@ function EnhancedTableHead(props: EnhancedTableHeadProps) {
     headCells,
     setFirstLoading,
   } = props
-  const createSortHandler = (property: keyof Campaign) => (event: React.MouseEvent<unknown>) => {
+  const createSortHandler = (property: keyof Puzzle) => (event: React.MouseEvent<unknown>) => {
     setFirstLoading(false)
     onRequestSort(event, property)
   }
@@ -106,8 +112,8 @@ function EnhancedTableHead(props: EnhancedTableHeadProps) {
   )
 }
 
-function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
-  const { numSelected, selected, setSelected, setCampaigns } = props
+function EnhancedTableToolbar(props: EnhancedTablePuzzleToolbarProps) {
+  const { numSelected, selected, setSelected, setPuzzles } = props
   const [open, setOpen] = React.useState(false)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const openPopover = Boolean(anchorEl)
@@ -160,7 +166,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       result = CheckQuantity(e.remainingVoucherCondition, result, e.remainingVoucher)
     }
     console.log(result)
-    setCampaigns(result)
+    setPuzzles(result)
     setAnchorEl(null)
   }
 
@@ -173,7 +179,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
     setValue('endDateCondition', undefined)
     setValue('remainingVoucher', undefined)
     setValue('remainingVoucherCondition', undefined)
-    setCampaigns(data.data.campaigns)
+    setPuzzles(data.data.campaigns)
     setAnchorEl(null)
   }
   return (
@@ -364,9 +370,9 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   )
 }
 
-export function EnhancedTable(props: EnhancedTableProps) {
+export function EnhancedTablePuzzle(props: EnhancedTablePuzzleProps) {
   const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<keyof Campaign>('_id')
+  const [orderBy, setOrderBy] = React.useState<keyof Puzzle>('_id')
   const [selected, setSelected] = React.useState<string[]>([])
   const [page, setPage] = React.useState(0)
   const [dense, setDense] = React.useState(false)
@@ -375,21 +381,21 @@ export function EnhancedTable(props: EnhancedTableProps) {
   const { headCells } = props
   const [dataDialog, setDataDialog] = React.useState()
   const [firstLoading, setFirstLoading] = React.useState(true)
-  const [campaigns, setCampaigns] = React.useState<any>([])
-  const { data } = useCampaign()
+  const [puzzles, setPuzzles] = React.useState<any>([])
+  const { data } = usePuzzle()
 
   React.useEffect(() => {
     if (data) {
-      setCampaigns(data.data.campaigns)
+      setPuzzles(data.data.puzzles)
     }
   }, [data])
   const handleDialog = (id: string) => {
-    const data = campaigns.find((item: any) => item._id === id)
+    const data = puzzles.find((item: any) => item._id === id)
     setDataDialog(data)
     setOpen(true)
   }
 
-  const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Campaign) => {
+  const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Puzzle) => {
     const isAsc = orderBy === property && order === 'asc'
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
@@ -397,7 +403,7 @@ export function EnhancedTable(props: EnhancedTableProps) {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = campaigns.map((n: any) => n._id)
+      const newSelected = puzzles.map((n: any) => n._id)
       setSelected(newSelected)
       return
     }
@@ -419,7 +425,7 @@ export function EnhancedTable(props: EnhancedTableProps) {
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - campaigns.length) : 0
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - puzzles.length) : 0
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -428,7 +434,7 @@ export function EnhancedTable(props: EnhancedTableProps) {
           numSelected={selected.length}
           selected={selected}
           setSelected={setSelected}
-          setCampaigns={setCampaigns}
+          setPuzzles={setPuzzles}
         />
         <TableContainer>
           <Table
@@ -442,12 +448,12 @@ export function EnhancedTable(props: EnhancedTableProps) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={campaigns.length}
-              headCells={headCells}
+              rowCount={puzzles.length}
+              headCells={puzzleCells}
               setFirstLoading={setFirstLoading}
             />
             <TableBody>
-              {stableSort(campaigns, getComparator(order, orderBy), firstLoading)
+              {stableSort(puzzles, getComparator(order, orderBy), firstLoading)
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row: any, index) => {
                   const isItemSelected = isSelected(row._id.toString())
@@ -470,12 +476,11 @@ export function EnhancedTable(props: EnhancedTableProps) {
                       >
                         <Link href={`/campaigns/${row._id}`}>{row._id.toString().slice(-5)}</Link>
                       </TableCell>
+                      <TableCell align="left">{row.title}</TableCell>
                       <TableCell align="left">
                         <Image src={row.image.toString()} width={70} height={50} alt="image" />
                       </TableCell>
 
-                      <TableCell align="left">{row.name}</TableCell>
-                      <TableCell align="left">{row.counterpartID.nameOfShop}</TableCell>
                       <TableCell align="left">
                         {dayjs(row.dateBegin).format('DD/MM/YYYY hh:mmA')}
                       </TableCell>
@@ -495,8 +500,7 @@ export function EnhancedTable(props: EnhancedTableProps) {
                           {row.status}
                         </Box>
                       </TableCell>
-                      <TableCell align="right">{row.typeOfRandom}</TableCell>
-                      <TableCell align="right">{row.remainingVoucher}</TableCell>
+
                       <TableCell align="left">
                         <Tooltip title="Details">
                           <IconButton
@@ -525,7 +529,7 @@ export function EnhancedTable(props: EnhancedTableProps) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={campaigns.length}
+          count={puzzles.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -536,7 +540,7 @@ export function EnhancedTable(props: EnhancedTableProps) {
         control={<Switch checked={dense} onChange={handleChangeDense} color="primary" />}
         label="Dense padding"
       />
-      <FormDialog data={dataDialog} setOpen={setOpen} open={open} />
+      <FormDialog dataDialog={dataDialog} setOpen={setOpen} open={open} />
     </Box>
   )
 }

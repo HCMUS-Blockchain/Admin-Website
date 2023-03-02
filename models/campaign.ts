@@ -34,6 +34,7 @@ export interface EnhancedTableHeadProps {
   orderBy: string
   rowCount: number
   headCells: HeadCell[]
+  setFirstLoading: any
 }
 
 export interface ColorStatus {

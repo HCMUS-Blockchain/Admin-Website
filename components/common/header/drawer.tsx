@@ -6,6 +6,7 @@ import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined'
 import StoreOutlinedIcon from '@mui/icons-material/StoreOutlined'
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined'
 import PaymentIcon from '@mui/icons-material/Payment'
+import ExtensionIcon from '@mui/icons-material/Extension'
 import {
   Box,
   Divider,
@@ -46,6 +47,11 @@ const drawerList = [
     title: 'Payments',
     icon: <PaymentIcon />,
     ref: '/payments',
+  },
+  {
+    title: 'Puzzles',
+    icon: <ExtensionIcon />,
+    ref: '/puzzles',
   },
 ]
 export const drawer = (

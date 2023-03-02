@@ -7,4 +7,5 @@ export const Color: ColorStatus = {
   ENDED: '#747474',
   NOT_ACCEPTED: '#EB455F',
   ACCEPTED: '#14A44D',
+  CREATED: '#14A44D',
 }

@@ -1,3 +1,5 @@
 export * from './input-field'
 export * from './date-time-picker-field'
 export * from './check-box-field'
+export * from './upload-field'
+export * from './upload-image-puzzle'

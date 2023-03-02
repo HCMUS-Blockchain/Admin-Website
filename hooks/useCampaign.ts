@@ -25,7 +25,6 @@ export function useCampaign() {
     } else {
       data.data.campaigns[item].status = 'HAPPENING'
     }
-    console.log(x)
     await campaignApi.updateCampaign(body)
     mutate(data, true)
   }
@@ -34,7 +33,7 @@ export function useCampaign() {
     const object = JSON.parse(JSON.stringify(Object.fromEntries(body)))
     const item = data.data.campaigns.findIndex((obj: any) => obj._id === object.id)
 
-    data.data.campaigns[item].status = 'NOT ACCEPTED'
+    data.data.campaigns[item].status = 'NOT_ACCEPTED'
     await campaignApi.refuseCampaign(body)
     mutate(data, true)
   }

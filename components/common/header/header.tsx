@@ -24,6 +24,7 @@ import {
 } from '@mui/material'
 import { useRouter } from 'next/router'
 import * as React from 'react'
+import NotificationDropdown from '../notification'
 import { drawer } from './drawer'
 
 const Search = styled('div')(({ theme }) => ({
@@ -146,7 +147,7 @@ export function HeaderComponent(props: Props) {
             </Stack>
             <Stack direction="row">
               <Box sx={{ alignSelf: 'center', mr: 2 }}>
-                <NotificationsIcon />
+                <NotificationDropdown />
               </Box>
               <IconButton
                 onClick={handleClick}
