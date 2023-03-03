@@ -64,7 +64,7 @@ const conditions = [
   'Less than or equal to',
 ]
 
-const status = ['Pending', 'Happening', 'Ended']
+const status = ['Created', 'Happening', 'Ended']
 
 function EnhancedTableHead(props: EnhancedTableHeadPuzzleProps) {
   const {
@@ -121,7 +121,7 @@ function EnhancedTableToolbar(props: EnhancedTablePuzzleToolbarProps) {
   const methods = useForm()
 
   const { register, handleSubmit, setValue } = methods
-  const { data, searchCampaign } = useCampaign()
+  const { data, searchPuzzle } = usePuzzle()
   const handleClickOpen = () => {
     setOpen(true)
   }
@@ -131,29 +131,22 @@ function EnhancedTableToolbar(props: EnhancedTablePuzzleToolbarProps) {
 
   const handleClose = () => {
     setOpen(false)
+    setAnchorEl(null)
   }
 
   const handleSearch = async (e: any) => {
     if (e.key === 'Enter') {
-      await searchCampaign({ keyword: e.target.value })
+      await searchPuzzle({ keyword: e.target.value })
     }
   }
 
   const handleSubmitFilter = (e: any) => {
-    let result = data.data.campaigns
+    let result = data.data.puzzles
     if (e.status) {
       const temp = e.status.map((item: string) => {
         return item.toUpperCase()
       })
       result = result.filter((item: any) => temp.includes(item.status.toString()))
-    }
-    if (e.typeOfRandom) {
-      const temp = e.typeOfRandom.map((item: string) => {
-        return item.toUpperCase()
-      })
-      result = result.filter((item: any) =>
-        temp.includes(item.typeOfRandom.toString().toUpperCase())
-      )
     }
     if (e.startDate && e.startDateCondition) {
       result = CheckStartDate(e.startDateCondition, result, e.startDate)
@@ -165,21 +158,17 @@ function EnhancedTableToolbar(props: EnhancedTablePuzzleToolbarProps) {
     if (e.remainingVoucher && e.remainingVoucherCondition) {
       result = CheckQuantity(e.remainingVoucherCondition, result, e.remainingVoucher)
     }
-    console.log(result)
     setPuzzles(result)
     setAnchorEl(null)
   }
 
   const handleReset = () => {
     setValue('status', undefined)
-    setValue('typeOfRandom', undefined)
     setValue('startDate', undefined)
     setValue('startDateCondition', undefined)
     setValue('endDate', undefined)
     setValue('endDateCondition', undefined)
-    setValue('remainingVoucher', undefined)
-    setValue('remainingVoucherCondition', undefined)
-    setPuzzles(data.data.campaigns)
+    setPuzzles(data.data.puzzles)
     setAnchorEl(null)
   }
   return (
@@ -192,15 +181,9 @@ function EnhancedTableToolbar(props: EnhancedTablePuzzleToolbarProps) {
         }),
       }}
     >
-      {numSelected > 0 ? (
-        <Typography sx={{ flex: '1 1 100%' }} color="inherit" variant="subtitle1" component="div">
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
-          Campaigns
-        </Typography>
-      )}
+      <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
+        Puzzles
+      </Typography>
       <Search>
         <SearchIconWrapper>
           <SearchIcon />
@@ -247,13 +230,7 @@ function EnhancedTableToolbar(props: EnhancedTablePuzzleToolbarProps) {
                   data={status}
                   required={false}
                 />
-                <CheckboxesGroup
-                  name="typeOfRandom"
-                  control={methods.control}
-                  label="Random method"
-                  data={['Chainlink', 'Uniswap']}
-                  required={false}
-                />
+
                 <Stack sx={{ mb: 1 }}>
                   <FormLabel component="legend" sx={{ mb: 1 }}>
                     Start Date
@@ -318,35 +295,6 @@ function EnhancedTableToolbar(props: EnhancedTablePuzzleToolbarProps) {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DateTimePickerField name="endDate" control={methods.control} label="Value" />
                     </LocalizationProvider>
-                  </Box>
-                </Stack>
-                <Stack sx={{ mb: 1 }}>
-                  <FormLabel component="legend" sx={{ mb: 1 }}>
-                    Remaining Voucher
-                  </FormLabel>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Controller
-                      control={methods.control}
-                      name="remainingVoucherCondition"
-                      render={({ field: { onChange, value, ref, name } }) => (
-                        <TextField
-                          select
-                          label="Remaining Voucher"
-                          onChange={onChange}
-                          inputRef={ref}
-                          sx={{ width: '200px', mr: 2 }}
-                          name={name}
-                          value={value ?? ''}
-                        >
-                          {conditions.map((item: string) => (
-                            <MenuItem key={item} value={item}>
-                              {item}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                      )}
-                    />
-                    <TextField sx={{ width: '240px' }} {...register('remainingVoucher')} />
                   </Box>
                 </Stack>
                 <Stack direction="row" sx={{ mt: 1 }} spacing={1}>

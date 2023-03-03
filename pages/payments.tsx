@@ -1,14 +1,16 @@
 import { MainLayout } from '@/components/layout'
 import { EnhancedTablePayment } from '@/components/payments'
-import { Box, Divider, Typography } from '@mui/material'
+import { Box, Divider, Typography, Breadcrumbs, Link } from '@mui/material'
 
 function PaymentScreen() {
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-        <Typography component="h2" variant="h5">
-          History Transaction
-        </Typography>
+        <Breadcrumbs aria-label="breadcrumb">
+          <Typography color="text.primary" variant="h6">
+            Payments
+          </Typography>
+        </Breadcrumbs>
       </Box>
       <Divider />
       <EnhancedTablePayment />

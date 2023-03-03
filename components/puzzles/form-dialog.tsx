@@ -20,7 +20,8 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import dayjs from 'dayjs'
 import { usePuzzle } from '@/hooks'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { LoadingButton } from '@mui/lab'
 const imageSchema = yup
   .mixed()
   .test('fileType', 'Invalid image', (value) => {
@@ -145,7 +146,9 @@ export function FormDialog({
   } = methods
 
   const { data, createPuzzle, updatePuzzle } = usePuzzle()
+  const [loading, setLoading] = useState(false)
   const handleSubmitForm = async (values: any) => {
+    setLoading(true)
     const formData = new FormData()
     formData.append('image', values.image || '')
     formData.append('title', values.title)
@@ -181,6 +184,7 @@ export function FormDialog({
       console.log(e)
     } finally {
       setOpen(false)
+      setLoading(false)
     }
   }
   const closeForm = () => {
@@ -231,12 +235,14 @@ export function FormDialog({
                         name="dateBegin"
                         label="Start Date"
                         minDate={new Date()}
+                        disabled={!!dataDialog ? true : false}
                       />
                       <DateTimePickerField
                         control={methods.control}
                         name="dateEnd"
                         label="End Date"
                         minDate={new Date()}
+                        disabled={!!dataDialog ? true : false}
                       />
                     </LocalizationProvider>
                   </Stack>
@@ -267,9 +273,13 @@ export function FormDialog({
               </Grid>
               <DialogActions>
                 <Button onClick={() => closeForm()}>Cancel</Button>
-                <Button type="submit" onClick={() => handleSubmit(handleSubmitForm)}>
+                <LoadingButton
+                  loading={loading}
+                  type="submit"
+                  onClick={() => handleSubmit(handleSubmitForm)}
+                >
                   {!!dataDialog ? 'Update' : 'Submit'}
-                </Button>
+                </LoadingButton>
               </DialogActions>
             </Box>
           </FormProvider>

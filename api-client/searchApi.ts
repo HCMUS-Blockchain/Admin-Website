@@ -14,4 +14,7 @@ export const searchApi = {
   searchPayment(keyword: any) {
     return axiosClient.get('admin/search/payment', { params: keyword })
   },
+  searchPuzzle(keyword: any) {
+    return axiosClient.get('admin/search/puzzle', { params: keyword })
+  },
 }

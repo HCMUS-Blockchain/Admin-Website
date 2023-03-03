@@ -2,7 +2,7 @@ import { MainLayout } from '@/components/layout'
 import { EnhancedTablePuzzle, FormDialog } from '@/components/puzzles'
 import { puzzleCells } from '@/constants'
 import AddIcon from '@mui/icons-material/Add'
-import { Box, Button, Divider, Typography } from '@mui/material'
+import { Box, Button, Divider, Typography, Breadcrumbs, Link } from '@mui/material'
 import { useState } from 'react'
 
 export interface CampaignsScreenProps {}
@@ -15,9 +15,11 @@ function CampaignsScreen(props: CampaignsScreenProps) {
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-        <Typography component="h2" variant="h5">
-          Puzzles
-        </Typography>
+        <Breadcrumbs aria-label="breadcrumb">
+          <Typography color="text.primary" variant="h6">
+            Puzzles
+          </Typography>
+        </Breadcrumbs>
         <Button
           variant="contained"
           color="primary"

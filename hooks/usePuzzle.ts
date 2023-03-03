@@ -1,4 +1,4 @@
-import { puzzleApi } from '@/api-client'
+import { puzzleApi, searchApi } from '@/api-client'
 import useSWR from 'swr'
 
 export function usePuzzle() {
@@ -9,7 +9,12 @@ export function usePuzzle() {
 
   async function createPuzzle(payload: any, values: any) {
     await puzzleApi.create(payload)
-    await mutate([...data.data.puzzles, values], true)
+    const x = {
+      data: {
+        puzzles: [...data.data.puzzles, values],
+      },
+    }
+    await mutate(x, true)
   }
 
   async function updatePuzzle(payload: any, values: any) {
@@ -24,10 +29,16 @@ export function usePuzzle() {
     mutate(x, true)
   }
 
+  async function searchPuzzle(payload: any) {
+    const result = await searchApi.searchPuzzle(payload)
+    mutate(result, false)
+  }
+
   return {
     data,
     error,
     createPuzzle,
     updatePuzzle,
+    searchPuzzle,
   }
 }

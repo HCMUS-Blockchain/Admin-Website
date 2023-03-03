@@ -193,12 +193,12 @@ export function UploadImagePuzzle({ limit, multiple, name, ...rest }: IFileUploa
             sx={{
               color: '#df2c0e',
               position: 'absolute',
-              right: '1rem',
               top: '50%',
-              left: '0',
-              transform: 'translateY(-50%)',
+              mt: 2,
+              transform: 'translateY(-150%)',
+              backgroundColor: '#FFF',
               '&:hover': {
-                backgroundColor: '#FFFFFF',
+                backgroundColor: 'rgb(192,192,192)',
               },
             }}
           >
@@ -236,9 +236,9 @@ export function UploadImagePuzzle({ limit, multiple, name, ...rest }: IFileUploa
                     top: '50%',
                     mt: 2,
                     transform: 'translateY(-50%)',
-                    backgroundColor: 'rgb(192,192,192)',
+                    backgroundColor: '#FFF',
                     '&:hover': {
-                      backgroundColor: '#FFF',
+                      backgroundColor: 'rgb(192,192,192)',
                     },
                   }}
                 >

@@ -8,6 +8,7 @@ import {
   IconButton,
   Grid,
   Tooltip,
+  Breadcrumbs,
 } from '@mui/material'
 import ArrowDownWardIcon from '@mui/icons-material/ArrowDownward'
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
@@ -50,6 +51,11 @@ export function Home() {
   console.log(data)
   return (
     <Stack spacing={2}>
+      <Breadcrumbs aria-label="breadcrumb">
+        <Typography color="text.primary" variant="h6">
+          Dashboard
+        </Typography>
+      </Breadcrumbs>
       <Paper>
         <Box
           sx={{ display: 'flex', justifyContent: 'space-between', p: 2, alignContent: 'center' }}

@@ -19,14 +19,6 @@ function CampaignsScreen(props: CampaignsScreenProps) {
         <Typography component="h2" variant="h5">
           Campaigns
         </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<AddIcon />}
-          onClick={() => route.push('./campaigns/create')}
-        >
-          Create
-        </Button>
       </Box>
       <Divider />
       <EnhancedTable headCells={headCells} />

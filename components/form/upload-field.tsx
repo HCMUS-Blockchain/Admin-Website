@@ -201,8 +201,10 @@ export function UploadImageComponent({ limit, multiple, name, ...rest }: IFileUp
             position: 'relative',
             borderRadius: 1.5,
             p: 0.5,
-            width: '100%',
             mt: 5,
+            width: '55px',
+            ml: 'auto',
+            mr: 'auto',
           }}
         >
           <IconButton
@@ -216,8 +218,9 @@ export function UploadImageComponent({ limit, multiple, name, ...rest }: IFileUp
               top: '50%',
               left: '0',
               transform: 'translateY(-50%)',
+              backgroundColor: '#FFF',
               '&:hover': {
-                backgroundColor: '#FFFFFF',
+                backgroundColor: 'rgb(192,192,192)',
               },
             }}
           >
@@ -271,8 +274,9 @@ export function UploadImageComponent({ limit, multiple, name, ...rest }: IFileUp
                     right: '1rem',
                     top: '50%',
                     transform: 'translateY(-50%)',
+                    backgroundColor: '#FFF',
                     '&:hover': {
-                      backgroundColor: '#FFFFFF',
+                      backgroundColor: 'rgb(192,192,192)',
                     },
                   }}
                 >
