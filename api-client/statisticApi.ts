@@ -19,4 +19,7 @@ export const statisticApi = {
   getStatisticCampaign(payload: any) {
     return axiosClient.post('/admin/statistics/campaign', payload)
   },
+  getStatisticPuzzle(payload: any) {
+    return axiosClient.post('/admin/statistics/puzzle', payload)
+  },
 }

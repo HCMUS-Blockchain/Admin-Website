@@ -1,5 +1,5 @@
 import { MainLayout } from '@/components/layout'
-import { EnhancedTablePuzzle, FormDialog } from '@/components/puzzles'
+import { EnhancedTablePuzzle, FormDialog, VerticalBarChart } from '@/components/puzzles'
 import { puzzleCells } from '@/constants'
 import AddIcon from '@mui/icons-material/Add'
 import { Box, Button, Divider, Typography, Breadcrumbs, Link } from '@mui/material'
@@ -32,6 +32,7 @@ function CampaignsScreen(props: CampaignsScreenProps) {
       <Divider />
       <EnhancedTablePuzzle headCells={puzzleCells} />
       <FormDialog open={open} setOpen={setOpen} dataDialog={null} />
+      <VerticalBarChart />
     </Box>
   )
 }
