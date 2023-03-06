@@ -3,7 +3,7 @@ import { MainLayout } from '@/components/layout'
 import { headCells } from '@/constants'
 import { useCampaign } from '@/hooks'
 import AddIcon from '@mui/icons-material/Add'
-import { Box, Button, Divider, Typography } from '@mui/material'
+import { Box, Breadcrumbs, Button, Divider, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
@@ -16,9 +16,11 @@ function CampaignsScreen(props: CampaignsScreenProps) {
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-        <Typography component="h2" variant="h5">
-          Campaigns
-        </Typography>
+        <Breadcrumbs aria-label="breadcrumb">
+          <Typography color="text.primary" variant="h6">
+            Campaigns
+          </Typography>
+        </Breadcrumbs>
       </Box>
       <Divider />
       <EnhancedTable headCells={headCells} />

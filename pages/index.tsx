@@ -77,15 +77,9 @@ export function Home() {
               width: '200px',
             }}
             onChange={handleChange}
-            color="secondary"
           >
             {filter.map((option) => (
-              <MenuItem
-                key={option.value}
-                value={option.value}
-                color="secondary"
-                sx={{ color: '#00ABCC' }}
-              >
+              <MenuItem key={option.value} value={option.value} sx={{ color: 'black' }}>
                 {option.label}
               </MenuItem>
             ))}

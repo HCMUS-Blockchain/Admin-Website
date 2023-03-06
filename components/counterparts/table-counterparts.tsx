@@ -208,7 +208,7 @@ export function EnhancedTableCounterpart() {
               headCells={counterpartCell}
             />
             <TableBody>
-              {stableSort(counterparts, getComparator(order, orderBy))
+              {stableSort(counterparts, getComparator(order, orderBy), false)
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row: any, index) => {
                   const isItemSelected = isSelected(row._id.toString())

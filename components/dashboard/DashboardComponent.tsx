@@ -154,7 +154,11 @@ export function DashboardComponent({ id }: DashboardComponentInterface) {
             </TextField>
             <DateTimePickerField name="startDate" control={control} label="Start Date" />
             <DateTimePickerField name="endDate" control={control} label="End Date" />
-            <Button type="submit">Show</Button>
+            <Box alignSelf="center">
+              <Button variant="outlined" type="submit">
+                Show
+              </Button>
+            </Box>
           </Stack>
         </LocalizationProvider>
       </Box>

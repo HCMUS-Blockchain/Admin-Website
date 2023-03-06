@@ -1,6 +1,20 @@
 import { usePuzzle, usePuzzleStatistic } from '@/hooks'
 import StarIcon from '@mui/icons-material/Star'
-import { Box, Button, IconButton, MenuItem, Stack, TextField, Typography } from '@mui/material'
+import {
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  MenuItem,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import axios from 'axios'
@@ -13,7 +27,9 @@ import {
   Title,
   Tooltip,
 } from 'chart.js'
+import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
+import React from 'react'
 import { Bar } from 'react-chartjs-2'
 import { useForm } from 'react-hook-form'
 
@@ -27,12 +43,13 @@ const options = {
     },
     title: {
       display: true,
-      text: 'The number of vouchers is got',
+      text: 'The number of Puzzles is got',
     },
   },
 }
 export function VerticalBarChart() {
   const { data: puzzles } = usePuzzle()
+  const [winnerList, setWinnerList] = useState([])
   const {
     register,
     handleSubmit,
@@ -57,7 +74,7 @@ export function VerticalBarChart() {
     ],
     datasets: [
       {
-        label: 'Pieces',
+        label: 'Quantity',
         data: [],
         backgroundColor: 'rgba(53, 162, 235, 0.5)',
       },
@@ -72,17 +89,22 @@ export function VerticalBarChart() {
         datasets: [
           {
             label: 'Pieces',
-            data: x.data.result,
+            data: x.data.result.data,
             backgroundColor: 'rgba(53, 162, 235, 0.5)',
           },
         ],
       })
+      if (x.data.result.length === 0) {
+        setWinnerList([])
+      } else {
+        setWinnerList(x.data.result.list)
+      }
     } catch (e) {
       console.log(e)
     }
   }
   return (
-    <>
+    <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 2, alignContent: 'center' }}>
         <Box
           sx={{ display: 'flex', alignContent: 'center', justifyContent: 'space-between' }}
@@ -109,13 +131,11 @@ export function VerticalBarChart() {
               select
               label="Select"
               defaultValue=""
+              placeholder="Select a puzzle campaign"
+              sx={{ width: '240px' }}
               {...register('option')}
               error={!!errors.option}
-              helperText={
-                errors.option
-                  ? "Please choose a puzzle's campaign"
-                  : "Please choose a puzzle's campaign"
-              }
+              helperText={errors.option ? "Please choose a puzzle's campaign" : null}
             >
               {puzzles
                 ? puzzles.data.puzzles.map((option: any) => (
@@ -125,11 +145,99 @@ export function VerticalBarChart() {
                   ))
                 : null}
             </TextField>
-            <Button type="submit">Show</Button>
+            <Box alignSelf="center">
+              <Button variant="outlined" type="submit">
+                Show
+              </Button>
+            </Box>
           </Stack>
         </LocalizationProvider>
       </Box>
-      <Bar options={options} data={data} height="250" width="350" />
-    </>
+      <Stack direction="row" justifyContent="space-between">
+        <Box width="900" height="500">
+          <Bar options={options} data={data} width="900" height="500" />
+        </Box>
+        <Stack sx={{ mt: 3 }}>
+          <Typography variant="h6" sx={{ mr: 2, ml: 2, width: '300px' }} component="span">
+            LIST OF WINNER
+          </Typography>
+
+          <Box sx={{ mt: 0 }}>
+            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+              {winnerList.length !== 0 ? (
+                winnerList.map((item: any, index) => (
+                  <ListItem alignItems="flex-start" key={index} sx={{ width: '250px' }}>
+                    <ListItemAvatar>
+                      <Avatar alt="Remy Sharp" src={item.avatar} />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={item.name}
+                      secondary={
+                        <React.Fragment>
+                          <Typography
+                            sx={{
+                              display: 'block',
+                              overflow: ' hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              width: '210px',
+                            }}
+                            variant="body2"
+                            component="span"
+                            color="text.primary"
+                          >
+                            Email: {item.email}
+                          </Typography>
+                          <Typography
+                            sx={{
+                              display: 'block',
+                              overflow: ' hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              width: '210px',
+                            }}
+                            variant="body2"
+                            component="span"
+                            color="text.primary"
+                          >
+                            Code: {item.code}
+                          </Typography>
+
+                          <Typography
+                            sx={{
+                              display: 'block',
+                              overflow: ' hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              width: '210px',
+                            }}
+                            variant="body2"
+                            component="span"
+                            color="text.primary"
+                          >
+                            Received: {dayjs(item.createdAt).format('DD/MM/YYYY')}
+                          </Typography>
+                        </React.Fragment>
+                      }
+                    />
+                    <Divider variant="inset" component="li" />
+                  </ListItem>
+                ))
+              ) : (
+                <ListItem alignItems="flex-start">
+                  <ListItemText
+                    primary={
+                      <Typography component="span" color="text.primary">
+                        There is not any winner
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+              )}
+            </List>
+          </Box>
+        </Stack>
+      </Stack>
+    </Box>
   )
 }
