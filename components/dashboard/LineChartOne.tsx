@@ -21,7 +21,7 @@ const options = {
     },
     title: {
       display: true,
-      text: 'Voucher',
+      text: 'A number of users who participated',
     },
   },
 }
@@ -54,7 +54,7 @@ export function LineChartOne({ dayOfTheYear, user }: LineChartOneInterface) {
     if (user) {
       const datasets = [
         {
-          label: 'Total Users Which Participated In',
+          label: 'Total Users Who Participated In',
           data: user,
           borderColor: 'rgb(255, 99, 132)',
           backgroundColor: 'rgba(255, 99, 132, 0.5)',

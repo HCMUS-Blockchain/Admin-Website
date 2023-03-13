@@ -1,10 +1,8 @@
-import { NextApiHandler, NextApiRequest } from 'next'
-import formidable from 'formidable'
 import cloudinary from 'cloudinary'
-import dayjs from 'dayjs'
-import httpProxy from 'http-proxy'
-import { Campaign } from '@/models'
 import Cookies from 'cookies'
+import formidable from 'formidable'
+import httpProxy from 'http-proxy'
+import { NextApiHandler, NextApiRequest } from 'next'
 
 cloudinary.v2.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -88,7 +86,7 @@ const handler: NextApiHandler = async (req, res) => {
 
   return new Promise((resolve) => {
     const cookies = new Cookies(req, res)
-    const accessToken = cookies.get('access_token')
+    const accessToken = cookies.get('access_token_admin')
     if (accessToken) {
       req.headers.Authorization = `JWT ${accessToken}`
     }

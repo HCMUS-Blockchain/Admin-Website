@@ -163,15 +163,21 @@ export function VerticalBarChart() {
           </Typography>
 
           <Box sx={{ mt: 0 }}>
-            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+            <List
+              sx={{
+                bgcolor: 'background.paper',
+                maxHeight: '450px',
+                overflow: 'auto',
+              }}
+            >
               {winnerList.length !== 0 ? (
                 winnerList.map((item: any, index) => (
-                  <ListItem alignItems="flex-start" key={index} sx={{ width: '250px' }}>
+                  <ListItem alignItems="flex-start" key={index} sx={{ width: '270px' }}>
                     <ListItemAvatar>
                       <Avatar alt="Remy Sharp" src={item.avatar} />
                     </ListItemAvatar>
                     <ListItemText
-                      primary={item.name}
+                      primary={<Typography sx={{ width: '270px' }}>{item.name}</Typography>}
                       secondary={
                         <React.Fragment>
                           <Typography

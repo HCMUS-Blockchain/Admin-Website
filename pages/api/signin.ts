@@ -41,7 +41,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
           const { token, expiredAt } = JSON.parse(body)
           // convert token to cookies
           const cookies = new Cookies(req, res, { secure: process.env.NODE_ENV !== 'development' })
-          cookies.set('access_token', token, {
+          cookies.set('access_token_admin', token, {
             httpOnly: true,
             sameSite: 'lax',
             expires: new Date(expiredAt),

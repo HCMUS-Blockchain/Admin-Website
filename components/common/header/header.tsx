@@ -85,6 +85,7 @@ export function HeaderComponent(props: Props) {
   const open = Boolean(anchorEl)
 
   const { profile, logout } = useAuth()
+
   const router = useRouter()
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
@@ -162,7 +163,7 @@ export function HeaderComponent(props: Props) {
                 }}
               >
                 <Typography sx={{ mr: 2 }}>{profile.data.fullName}</Typography>
-                <Avatar src={profile.data.avatar} alt="avatar" />
+                <Avatar src={profile.data.avatar} />
               </IconButton>
 
               <Menu

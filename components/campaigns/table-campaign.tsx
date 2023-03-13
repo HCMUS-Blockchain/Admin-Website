@@ -58,7 +58,7 @@ const conditions = [
   'Less than or equal to',
 ]
 
-const status = ['Pending', 'Happening', 'Ended']
+const status = ['Pending', 'Happening', 'Ended', 'Not_Accepted', 'Created']
 
 function EnhancedTableHead(props: EnhancedTableHeadProps) {
   const {
@@ -125,6 +125,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 
   const handleClose = () => {
     setOpen(false)
+    setAnchorEl(null)
   }
 
   const handleSearch = async (e: any) => {
@@ -245,7 +246,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                   name="typeOfRandom"
                   control={methods.control}
                   label="Random method"
-                  data={['Chainlink', 'Uniswap']}
+                  data={['Chainlink', 'Uniswap', 'Uniswap with nonce number']}
                   required={false}
                 />
                 <Stack sx={{ mb: 1 }}>

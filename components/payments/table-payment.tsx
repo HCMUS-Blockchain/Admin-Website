@@ -171,18 +171,15 @@ export function EnhancedTablePayment() {
             />
             {payments.length > 0 && (
               <TableBody>
-                {stableSort(payments, getComparator(order, orderBy))
+                {stableSort(payments, getComparator(order, orderBy), false)
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
+                  .map((row: any, index) => {
                     const isItemSelected = isSelected(row._id.toString())
                     const labelId = `enhanced-table-checkbox-${index}`
-
                     return (
                       <TableRow
                         hover
                         color="info"
-                        // onClick={(event) => handleClick(event, row._id.toString())}
-                        // role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
                         key={index}

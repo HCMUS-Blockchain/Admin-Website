@@ -189,7 +189,7 @@ function EnhancedTableToolbar(props: EnhancedTablePuzzleToolbarProps) {
           <SearchIcon />
         </SearchIconWrapper>
         <StyledInputBase
-          placeholder="Search campaign's name or shop..."
+          placeholder="Search title..."
           inputProps={{ 'aria-label': 'search' }}
           onKeyDown={(e: any) => handleSearch(e)}
         />
@@ -422,7 +422,7 @@ export function EnhancedTablePuzzle(props: EnhancedTablePuzzleProps) {
                         padding="none"
                         align="right"
                       >
-                        <Link href={`/campaigns/${row._id}`}>{row._id.toString().slice(-5)}</Link>
+                        {row._id.toString().slice(-5)}
                       </TableCell>
                       <TableCell align="left">{row.title}</TableCell>
                       <TableCell align="left">

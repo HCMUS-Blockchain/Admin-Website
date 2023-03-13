@@ -65,7 +65,7 @@ export function Home() {
               <StarIcon />
             </IconButton>
             <Typography variant="h6" alignSelf="center">
-              Statistic General
+              General Statistic
             </Typography>
           </Box>
 

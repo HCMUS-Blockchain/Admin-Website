@@ -14,6 +14,7 @@ export function useCampaign() {
 
   async function searchCampaign(payload: any) {
     const result = await searchApi.searchCampaign(payload)
+    console.log(result)
     mutate(result, false)
   }
 

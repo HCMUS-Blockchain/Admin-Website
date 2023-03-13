@@ -31,7 +31,7 @@ const options = {
     },
     title: {
       display: true,
-      text: 'New counterparts',
+      text: 'A number of new counterparts',
     },
   },
 }
@@ -70,7 +70,7 @@ export function VerticalBarChart() {
     labels: dateOfTheYear,
     datasets: [
       {
-        label: 'New counterparts',
+        label: 'A number of new counterparts',
         data: [],
         backgroundColor: 'rgba(53, 162, 235, 0.5)',
       },

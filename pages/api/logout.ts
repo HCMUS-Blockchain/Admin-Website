@@ -16,7 +16,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<any>) 
   }
 
   const cookie = new Cookies(req, res)
-  cookie.set('access_token')
+  cookie.set('access_token_admin')
 
   res.status(200).json({ message: 'logout successfully' })
 }
